@@ -15,14 +15,17 @@ TYPE_DICT = {
     "char" : "char"
 }
 
-def capitalize_name(name):
+def capitalize_name(name, first_low = True):
     name_c = name.split("_")
     for i in range(len(name_c)):
         name_c[i] = name_c[i].capitalize()
-    return "".join(name_c)
+    result = "".join(name_c)
+    if first_low:
+        result = result[0].lower() + result[1:]
+    return result
 
 def write_cpp(name, params):
-    name_c = capitalize_name(name)
+    name_c = capitalize_name(name, False)
     with open(dir_path + "src/" + name + ".cpp", "w") as f_cpp:
         f_cpp.write('#include "' + name + '.h"\n\n')
         f_cpp.write(name_c + "::" + name_c + "(")
@@ -30,8 +33,8 @@ def write_cpp(name, params):
         init_list = []
         for param in params:
             p = param.split(":")
-            constructor_params.append(TYPE_DICT[p[1]] + " " + p[0])
-            init_list.append(p[0] + "(" + p[0] + ")")
+            constructor_params.append(TYPE_DICT[p[1]] + " " + capitalize_name(p[0]))
+            init_list.append(capitalize_name(p[0]) + "(" + capitalize_name(p[0]) + ")")
         f_cpp.write(", ".join(constructor_params))
         f_cpp.write(") :\n")
         f_cpp.write(", ".join(init_list))
@@ -39,10 +42,10 @@ def write_cpp(name, params):
         for param in params:
             p = param.split(":")
             type_get = "is" if TYPE_DICT[p[1]] == "bool" else "get"
-            f_cpp.write("const " + TYPE_DICT[p[1]] + " " + name_c + "::" + type_get + capitalize_name(p[0]) + "() const\n{\n\treturn this->" + p[0] + ";\n}\n\n")
+            f_cpp.write("const " + TYPE_DICT[p[1]] + " " + name_c + "::" + type_get + capitalize_name(p[0], False) + "() const\n{\n\treturn this->" + capitalize_name(p[0]) + ";\n}\n\n")
 
 def write_h(name, params):
-    name_c = capitalize_name(name)
+    name_c = capitalize_name(name, False)
     with open(dir_path + "include/" + name + ".h", "w") as f_h:
         f_h.write("#ifndef " + name.upper() + "_H\n#define " + name.upper() + "_H\n\n")
         f_h.write("class " + name_c +"\n{\n\tprivate:\n")
@@ -50,13 +53,13 @@ def write_h(name, params):
         for param in params:
             p = param.split(":")
             constructor_params.append(TYPE_DICT[p[1]])
-            f_h.write("\t\t" + TYPE_DICT[p[1]] + " " + p[0] + ";\n")
+            f_h.write("\t\t" + TYPE_DICT[p[1]] + " " + capitalize_name(p[0]) + ";\n")
         f_h.write("\n\tpublic:\n\t\t" + name_c + "(")
         f_h.write(", ".join(constructor_params) + ");\n\t\t~" + name_c + "();\n")
         for param in params:
             p = param.split(":")
             type_get = "is" if TYPE_DICT[p[1]] == "bool" else "get"
-            f_h.write("\t\tconst " + TYPE_DICT[p[1]] + " " + type_get + capitalize_name(p[0]) + "() const;\n")
+            f_h.write("\t\tconst " + TYPE_DICT[p[1]] + " " + type_get + capitalize_name(p[0], False) + "() const;\n")
         f_h.write("\n};\n#endif")
             
 def write_files(s):
