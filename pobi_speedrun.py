@@ -39,7 +39,7 @@ def write_cpp(name, params):
         for param in params:
             p = param.split(":")
             type_get = "is" if TYPE_DICT[p[1]] == "bool" else "get"
-            f_cpp.write("const " + TYPE_DICT[p[1]] + " " + name_c + "::" + type_get + p[0].capitalize() + "() const\n{\n\treturn this->" + p[0] + ";\n}\n\n")
+            f_cpp.write("const " + TYPE_DICT[p[1]] + " " + name_c + "::" + type_get + capitalize_name(p[0]) + "() const\n{\n\treturn this->" + p[0] + ";\n}\n\n")
 
 def write_h(name, params):
     name_c = capitalize_name(name)
@@ -56,7 +56,7 @@ def write_h(name, params):
         for param in params:
             p = param.split(":")
             type_get = "is" if TYPE_DICT[p[1]] == "bool" else "get"
-            f_h.write("\t\tconst " + TYPE_DICT[p[1]] + " " + type_get + p[0].capitalize() + "() const;\n")
+            f_h.write("\t\tconst " + TYPE_DICT[p[1]] + " " + type_get + capitalize_name(p[0]) + "() const;\n")
         f_h.write("\n};\n#endif")
             
 def write_files(s):
