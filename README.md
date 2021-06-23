@@ -1,6 +1,6 @@
 ##execution
 
-pyhon3 pobi_speedrun.py path/to/your/prohect class_name first_param:type second_param:type ...
+pyhon3 pobi_speedrun.py path/to/your/project class_name first_param:type second_param:type ...
 
 *project directory must contain include and src directories*
 
